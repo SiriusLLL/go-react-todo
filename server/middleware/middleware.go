@@ -32,16 +32,20 @@ func loadTheEnv() {
 }
 
 func createDBInstance() {
+	// 获取env中的信息
 	connectionString := os.Getenv("DB_URI")
 	dbName := os.Getenv("DB_NAME")
 	collName := os.Getenv("DB_COLLECTION_NAME")
 
+	// 创建mongoDB客户端
 	clientOptions := options.Client().ApplyURI(connectionString)
+	// 连接mongoDB客户端
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// 测试mongoDB连通性
 	err1 := client.Ping(context.TODO(), nil)
 	if err1 != nil {
 		log.Fatal(err1)
@@ -49,6 +53,7 @@ func createDBInstance() {
 
 	fmt.Println("connected to mongoDB!")
 
+	// 创建mongoDB集合实例
 	collection = client.Database(dbName).Collection(collName)
 	fmt.Println("collection instance created")
 }
@@ -143,7 +148,6 @@ func taskComplete(task string) {
 		log.Fatal(err)
 	}
 	fmt.Println("modified count:", result.ModifiedCount)
-
 }
 
 func insertOneTask(task models.ToDoList) {
